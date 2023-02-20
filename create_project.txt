@@ -1,0 +1,7 @@
+rails new askchatgpt
+cd askchatgpt
+bundle install
+ruby bin/rails generate controller Prompts index --skip-routes
+ruby bin/rails generate model Prompt title:string body:text
+ruby bin/rails db:migrate
+ruby bin/rails generate model Reply body:text prompt:references
