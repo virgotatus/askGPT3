@@ -1,0 +1,11 @@
+<h1>Prompts Lists</h1>
+
+<ul>
+  <% @prompts.each do |prompt| %>
+    <li>
+      <%= link_to prompt.title, prompt %>
+    </li>
+  <% end %>
+</ul>
+
+<%= link_to "New Prompt", new_prompt_path %>

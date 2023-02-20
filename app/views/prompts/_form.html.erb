@@ -1,0 +1,40 @@
+<%= form_with model: prompt do |form| %>
+  <div>
+    <%= form.label :title %><br>
+    <%= form.text_field :title %>
+    <% prompt.errors.full_messages_for(:title).each do |message| %>
+      <div><%= message %></div>
+    <% end %>
+  </div>
+
+  <div>
+    <%= form.label :body %><br>
+    <%= form.text_area :body %><br>
+    <% prompt.errors.full_messages_for(:body).each do |message| %>
+      <div><%= message %></div>
+    <% end %>
+  </div>
+  
+  <div>
+    <%= form.fields_for :detail_attributes, prompt.detail do |detail_form| %>
+      <%= detail_form.label "img name: " %> <br>
+      <%= detail_form.text_field :imgname, value: "godthemselves.png" %>
+      <br>
+      <%= detail_form.label "img link: " %> <br>
+      <%= detail_form.text_field :imglink, value: "https://book.douban.com/subject/26264967/" %>
+      <br>
+      <%= detail_form.label "description: " %> <br>
+      <%= detail_form.text_area :description, size: "100*10",
+      value: "This is an experiment in using AI to make my book's content more accessible. Ask a question and AI'll answer it in real-time:" %>
+      <br>
+      <%= detail_form.label "alter questions: (splited by +) " %> <br>
+      <%= detail_form.text_area :alter_questions, size: "100*10",
+      value: "who's Elon Mask?+How to cure after relationship broken+I'm sad" %>
+      <br>
+    <% end %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>
