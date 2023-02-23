@@ -15,7 +15,7 @@ worker_timeout 3600 if ENV.fetch("RAILS_ENV", "development") == "development"
 
 # Specifies the `port` that Puma will listen on to receive requests; default is 3000.
 #
-#port ENV.fetch("PORT") { 3000 }
+port ENV.fetch("PORT") { 3000 }
 
 # Specifies the `environment` that Puma will run in.
 #
@@ -58,7 +58,7 @@ tmp_dir = "#{app_dir}/tmp"
 #environment rails_env
 
 # Set up socket location
-bind "unix://#{tmp_dir}/sockets/puma.sock"
+#bind "unix://#{tmp_dir}/sockets/puma.sock"
 
 # Logging
 stdout_redirect "#{tmp_dir}/log/puma.stdout.log", "#{tmp_dir}/log/puma.stderr.log", true
@@ -66,7 +66,7 @@ stdout_redirect "#{tmp_dir}/log/puma.stdout.log", "#{tmp_dir}/log/puma.stderr.lo
 # Set master PID and state locations
 pidfile "#{tmp_dir}/pids/puma.pid"
 state_path "#{tmp_dir}/pids/puma.state"
-activate_control_app
+# activate_control_app
 
 on_worker_boot do
   require "active_record"
