@@ -3,7 +3,7 @@ Rails.application.routes.draw do
   resources :prompts do
     resources :reply
     resources :detail
-    get 'ask_ai', to: 'ask_ai'
+    post 'ask_ai', to: 'ask_ai'
   end
 
 end
