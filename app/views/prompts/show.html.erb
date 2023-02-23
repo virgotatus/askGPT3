@@ -1,55 +1,65 @@
-
-<% detail_existed=(@prompt.detail != nil) %>
-<a href=<%= detail_existed ? @prompt.detail.imglink : "https://book.douban.com/"  %>>
- <%= image_tag detail_existed ? @prompt.detail.imgname : "godthemselves.png" %>
-</a>
-
-<%= form_with model: @prompt do |form| %>
-  <div>
-    <h3><%= form.label "Question: " %>
-    <%= form.text_field :title , size: "8x2" %>
-    <% @prompt.errors.full_messages_for(:title).each do |message| %>
-      <div><%= message %></div>
-    <% end %>
-    </h3>
+<body>
+<div class='header'>
+  <div class='logo'>
+    <% detail_existed=(@prompt.detail != nil) %>
+    <a href=<%= detail_existed ? @prompt.detail.imglink : "https://book.douban.com/"  %>>
+    <%= image_tag detail_existed ? @prompt.detail.imgname : "godthemselves.png" %>
+    </a>
+    <h1><%= @prompt.title %></h1>
   </div>
-  <br>
-  <%= detail_existed ? @prompt.detail.description : " " %>
-  <br>
-  <div>
-    <%= form.text_area :body , size: "40x2", id: "prompt_body" %><br>
-    <% @prompt.errors.full_messages_for(:body).each do |message| %>
-      <div><%= message %></div>
-    <% end %>
-  </div>
-  <div>
-    <%= javascript_include_tag "click_lucky.js" %>
-    <li><%= button_tag "Ask AI", onclick: "form.submit; location.href='#{prompt_path(@prompt)}+/ask_ai'" %></li>
-    <li><%= button_tag "Your lucky", id: "set_prompt_body", onclick:"click_lucky('#{escape_javascript(@prompt.detail.alter_questions)}'); form.submit" %></li>
+</div>
+
+
+<div class="main">
+<%= javascript_include_tag "askmybook.js" %>
+<p class="credits"><%= detail_existed ? @prompt.detail.description : " " %></p>
+
+<%= form_with model: @prompt , url: "#{@prompt.id}/ask_ai", method: "post" do |form| %>
+  <%= form.text_area :body , id: "prompt_body" %><br>
+  <% @prompt.errors.full_messages_for(:body).each do |message| %>
+    <div><%= message %></div>
+  <% end %>
+  <div class="buttons">
+    <!-- ask button should submit first and then call action-url -->
+    <%= button_tag "Ask question", id:"ask-button" %>
+    <!-- lucky button will call-event ask-button, but dont submit itself. so, type should setted 'button' -->
+    <%= button_tag "Your lucky", type:"button", id: "lucky-button", style:"background: #eee; border-color: #eee; color: #444;",
+     onclick:"click_lucky('#{escape_javascript(@prompt.detail.alter_questions)}')" %>
   </div>
 <% end %>
 
-<% if defined?(@prompt.reply.body) %>
-  <h3>Reply of AI</h3>
-  <p>
+<p id="answer-container" class="hidden showing">
+  <% if defined?(@prompt.reply.body) %>
+    <strong>Answer of AI:</strong>
     <%= @prompt.reply.body %>
+    <br>
+    <%= button_tag "Ask another question", id:"ask-another-button" %>
+    <audio id="audio" controls autoplay src=<%= @prompt.reply.radio_url %>>
+      <source src type="audio/wav">
+    </audio>
+  <% end %>
+</p>
+</div>
+
+
+<footer>
+  <p>
+    <ul class="queue credits"> Project by <%= link_to " Elon Gong", "https://blog.elonarise.top/" %> <b> · </b>
+    <%= link_to "Fork on Github", "https://github.com/virgotatus/askGPT3" %> </ul>
+    <ul class="queue credits">
+      <%= link_to "Edit", edit_prompt_path(@prompt) %>
+      <b> | </b>
+      <%= link_to "Destroy Question", prompt_path(@prompt), data: {
+        turbo_method: :delete,
+        turbo_confirm: "Are you sure?"
+        } %>
+      <b> | </b>
+      <%= link_to "Back", root_path %>
+    </ul>
   </p>
-  <audio id="audio" controls autoplay src=<%= @prompt.reply.radio_url %>>
-    <source src type="audio/wav">
-  </audio>
-<% end %>
+</footer>
 
-<ul>
-  <li><%= link_to "Edit", edit_prompt_path(@prompt) %></li>
-  <li><%= link_to "Destroy Question", prompt_path(@prompt), data: {
-    turbo_method: :delete,
-    turbo_confirm: "Are you sure?"
-    } %></li>
-  <li> <%= link_to "Back", root_path %> </li>
-  <li> Project by <%= link_to " Elon Gong", "https://blog.elonarise.top/" %> <b> · </b>
-  <%= link_to "Fork on Github", "https://github.com/virgotatus" %>
-</ul>
-
+</body>
 
 <!-- 
 // show how to insert script of javascript in html
@@ -60,4 +70,5 @@
     bodyField.value = "my New Name";
   });
 </script>
+
 -->

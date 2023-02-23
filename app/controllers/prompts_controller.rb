@@ -33,6 +33,7 @@ class PromptsController < ApplicationController
     if @prompt.update(title: prompt_params[:title], body: prompt_params[:body])
       redirect_to @prompt
     else
+      puts "update error; redirect to edit"
       render :edit, status: :unprocessable_entity
     end
   end
@@ -52,16 +53,18 @@ class PromptsController < ApplicationController
 
   def ask_ai
     @prompt = Prompt.find(params[:prompt_id])  # need a prompt_id
-    ai_result = get_ai(@prompt.body)
+    body = params[:prompt][:body]
+    @prompt.update(body: body)
+    ai_result = get_ai(body)
     ai_result = ai_result[0]  # index 0 of reply array
     print "ai_result:", ai_result , "\n"
-    # begin 
-    audio_url = speak_ai(ai_result)
-    puts audio_url
-    # rescue => e
-    #   puts "no audio"
-    #   audio_line = nil
-    # end
+    begin 
+      audio_url = speak_ai(ai_result)
+      puts audio_url
+    rescue => e
+      puts "no audio"
+      audio_line = nil
+    end
     if defined?(@prompt.reply.body)
       @prompt.reply.body = ai_result
       @prompt.reply.radio_url = audio_url
@@ -76,7 +79,6 @@ class PromptsController < ApplicationController
 
   def get_ai(prompt_text)
     client = OpenAI::Client.new
-    puts "openai!"
     response = client.completions(
         parameters: {
             model: "text-davinci-001",
@@ -84,9 +86,7 @@ class PromptsController < ApplicationController
             max_tokens: 10
         })
     puts response["choices"]
-    result = response["choices"].map { |c| c["text"] } 
-    puts "result:", result
-    result
+    result = response["choices"].map { |c| c["text"] }
   end
 
   def speak_ai(text)
