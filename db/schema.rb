@@ -18,7 +18,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_20_031222) do
     t.integer "prompt_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.text "alter_questions", default: "wish me lucky and happy"
+    t.text "alter_questions", default: "wish me lucky and happy", null: false
     t.index ["prompt_id"], name: "index_details_on_prompt_id"
   end
 
