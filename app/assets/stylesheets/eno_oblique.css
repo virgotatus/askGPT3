@@ -9,7 +9,6 @@ html {
   font-size: clamp(1em, 0.909em + 0.45vmin, 1.25em);
   /* use system font stack: https://developer.mozilla.org/en-US/docs/Web/CSS/font-family */
   font-family: system-ui;
-  background-color: orange
 }
 
 /* increase line-height for everything except headings */
@@ -17,8 +16,13 @@ body :not(:is(h1,h2,h3,h4,h5,h6)) {
   line-height: 1.75;
 }
 
+form {
+  line-height: 1.75;
+  text-align: center;
+}
+
 .header {
-  margin-top: 5vh;
+  margin-top: 3vh;
   text-align: center;
 }
 

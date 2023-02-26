@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  city: MyString
+  thing: MyString
+  oblique: MyString
+  style: MyString
+  answer: MyText
+
+two:
+  city: MyString
+  thing: MyString
+  oblique: MyString
+  style: MyString
+  answer: MyText

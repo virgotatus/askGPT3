@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_02_20_031222) do
+ActiveRecord::Schema[7.0].define(version: 2023_02_26_043755) do
   create_table "details", force: :cascade do |t|
     t.string "imgname"
     t.string "imglink"
@@ -18,8 +18,18 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_20_031222) do
     t.integer "prompt_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.text "alter_questions", default: "wish me lucky and happy", null: false
+    t.text "alter_questions", default: "wish me lucky and happy"
     t.index ["prompt_id"], name: "index_details_on_prompt_id"
+  end
+
+  create_table "ideas", force: :cascade do |t|
+    t.string "city"
+    t.string "thing"
+    t.string "oblique"
+    t.string "style"
+    t.text "answer"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "prompts", force: :cascade do |t|

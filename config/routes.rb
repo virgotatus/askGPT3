@@ -6,4 +6,8 @@ Rails.application.routes.draw do
     post 'ask_ai', to: 'ask_ai'
   end
 
+  get 'ideas', to: "ideas#index"
+  post 'ideas', to: "ideas#create"
+  post 'ideas/ask_ai', to: 'ideas#ask_ai'
+
 end

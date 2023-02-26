@@ -1,0 +1,57 @@
+<%= stylesheet_link_tag 'eno_oblique.css', media: 'all', 'data-turbolinks-track': 'reload' %>
+<%= javascript_include_tag "jquery-3.6.3.min.js" %>
+<body>
+
+<div class='header'>
+  <div class='logo'>
+    <a href="https://crm.org/articles/brian-eno-oblique-strategies" >
+    <%= image_tag src="https://dq51jve9h21d4.cloudfront.net/sites/default/files/styles/banner_image/public/articles/264/x5a268552-6c2f-4d4d-9a63-49bd980a02de.jpeg.pagespeed.ic.MIJkwlXjzS.webp" %>
+    </a>
+    <h1><%= "灵感炼丹炉" %></h1>
+    <h1><%= "random idea player" %></h1>
+    <p class="credits"><%= "Oblique Strategies: a set of axioms, transcribed onto cue cards and derived from the Chinese Divination system, the I Ching." %></p>
+  </div>
+</div>
+
+
+<div class="main">
+<%= form_with model: @idea, url: "ideas/ask_ai", method: "post" do |form| %>
+  <%= form.label "城市(City)：" %>
+  <%= form.text_field :city , size:"7*2" %>
+  <% @idea.errors.full_messages_for(:city).each do |message| %>
+    <div><%= message %></div>
+  <% end %>
+  &nbsp;&nbsp;&nbsp;&nbsp;
+  <%= form.label "东西(A thing)：" %>
+  <%= form.text_field :city, size:"10*2" %>
+  <% @idea.errors.full_messages_for(:city).each do |message| %>
+    <div><%= message %></div>
+  <% end %>
+  <br>
+  <div class="buttons">
+    <!-- ask button should submit first and then call action-url -->
+    <%= button_tag "生成 (generate)", id:"ask-button" %>
+  </div>
+<% end %>
+
+<p id="answer-container" class="hidden showing">
+  <% if (@idea.answer != nil) %>
+    <strong>灵感(Oblique Strategies):</strong>
+    <%= @idea.oblique %>
+    <br>
+    <strong>丹文:</strong>
+    <%= @idea.answer %>
+    <br>
+  <% end %>
+</p>
+</div>
+
+<footer>
+  <p>
+    <ul class="queue credits"> Project by <%= link_to " Elon Gong", "https://blog.elonarise.top/" %> <b> · </b>
+    <%= link_to "Fork on Github", "https://github.com/virgotatus/askGPT3" %> </ul>
+  </p>
+</footer>
+
+</body>
+
