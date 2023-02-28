@@ -1,4 +1,8 @@
+<%= stylesheet_link_tag 'askmybook', media: 'all', 'data-turbolinks-track': 'reload' %>
 <body>
+<%= javascript_include_tag "jquery-3.6.3.min.js" %>
+<%= javascript_include_tag "askmybook.js" %>
+
 <div class='header'>
   <div class='logo'>
     <% detail_existed=(@prompt.detail != nil) %>
@@ -11,10 +15,8 @@
 
 
 <div class="main">
-<%= javascript_include_tag "askmybook.js" %>
 <p class="credits"><%= detail_existed ? @prompt.detail.description : " " %></p>
-
-<%= form_with model: @prompt , url: "#{@prompt.id}/ask_ai", method: "post" do |form| %>
+<%= form_with model: @prompt , url: "#{@prompt.id}/ask_ai", method: "post", remote: true do |form| %>
   <%= form.text_area :body , id: "prompt_body" %><br>
   <% @prompt.errors.full_messages_for(:body).each do |message| %>
     <div><%= message %></div>
@@ -23,7 +25,7 @@
     <!-- ask button should submit first and then call action-url -->
     <%= button_tag "Ask question", id:"ask-button" %>
     <!-- lucky button will call-event ask-button, but dont submit itself. so, type should setted 'button' -->
-    <%= button_tag "Your lucky", type:"button", id: "lucky-button", style:"background: #eee; border-color: #eee; color: #444;",
+    <%= button_tag "I'm feeling lucky", type:"button", id: "lucky-button", style:"background: #eee; border-color: #eee; color: #444;",
      onclick:"click_lucky('#{escape_javascript(@prompt.detail.alter_questions)}')" %>
   </div>
 <% end %>
@@ -31,7 +33,7 @@
 <p id="answer-container" class="hidden showing">
   <% if defined?(@prompt.reply.body) %>
     <strong>Answer of AI:</strong>
-    <%= @prompt.reply.body %>
+    <span id="answer"><%= @prompt.reply.body %></span>
     <br>
     <%= button_tag "Ask another question", id:"ask-another-button" %>
     <audio id="audio" controls autoplay src=<%= @prompt.reply.radio_url %>>
@@ -70,5 +72,4 @@
     bodyField.value = "my New Name";
   });
 </script>
-
 -->
