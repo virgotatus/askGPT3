@@ -13,7 +13,6 @@ class PromptsController < ApplicationController
 
   def create
     @prompt = Prompt.new(prompt_params)
-    puts
     if @prompt.save
       redirect_to @prompt
     else
@@ -55,16 +54,16 @@ class PromptsController < ApplicationController
     @prompt = Prompt.find(params[:prompt_id])  # need a prompt_id
     body = params[:prompt][:body]
     @prompt.update(body: body)
-    ai_result = get_ai(body)
+    ai_result = get_ai(body +". your answer is:")
     ai_result = ai_result[0]  # index 0 of reply array
     print "ai_result:", ai_result , "\n"
     begin 
       audio_url = speak_ai(ai_result)
-      puts audio_url
     rescue => e
       puts "no audio"
-      audio_line = nil
+      audio_url = nil
     end
+    print "audio url:", audio_url, "\n"
     if defined?(@prompt.reply.body)
       @prompt.reply.body = ai_result
       @prompt.reply.radio_url = audio_url
@@ -74,7 +73,8 @@ class PromptsController < ApplicationController
       @prompt.reply = Reply.new(body: ai_result, prompt: @prompt, radio_url: audio_url)
     end
 
-    redirect_to prompt_path(@prompt)
+    @data = { answer: ai_result, audio_src_url: audio_url }
+    render json: @data
   end
 
   def get_ai(prompt_text)
