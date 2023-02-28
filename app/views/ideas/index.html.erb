@@ -1,5 +1,6 @@
 <%= stylesheet_link_tag 'eno_oblique.css', media: 'all', 'data-turbolinks-track': 'reload' %>
 <%= javascript_include_tag "jquery-3.6.3.min.js" %>
+<%= javascript_include_tag "ideaplayer.js" %>
 <body>
 
 <div class='header'>
@@ -37,14 +38,14 @@
 <% end %>
 
 <p id="answer-container" class="hidden showing">
-  <% if (@idea.answer != nil) %>
+
     <strong>灵感(Oblique Strategies):</strong>
-    <%= @idea.oblique %>
+    <span id='oblique'></span>
     <br>
     <strong>丹文:</strong>
-    <%= @idea.answer %>
+    <span id='answer'></span>
     <br>
-  <% end %>
+
 </p>
 </div>
 

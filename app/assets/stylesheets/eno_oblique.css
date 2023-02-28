@@ -9,6 +9,7 @@ html {
   font-size: clamp(1em, 0.909em + 0.45vmin, 1.25em);
   /* use system font stack: https://developer.mozilla.org/en-US/docs/Web/CSS/font-family */
   font-family: system-ui;
+  background-color: orange;
 }
 
 /* increase line-height for everything except headings */
