@@ -10,11 +10,17 @@ $(document).ready(function() {
   }
   
   $("form").submit(function(e) {
-    // if (document.getElementById("prompt_body").value == "") {
-    //   alert("Please ask a question!");
-    //   e.preventDefault();
-    //   return false;
-    // }
+    if (document.getElementById("idea_city").value == "") {
+      alert("Please fill zone!");
+      e.preventDefault();
+      return false;
+    }
+
+    if (document.getElementById("idea_thing").value == "") {
+      alert("Please fill thing!");
+      e.preventDefault();
+      return false;
+    }
 
     let askButton = document.getElementById("ask-button");
     askButton.textContent = "Generating...";

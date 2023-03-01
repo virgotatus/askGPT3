@@ -19,7 +19,7 @@
 <%= form_with model: @idea, url: "ideas/ask_ai", method: "post" do |form| %>
   <%= form.text_field "gtime", value:Time.now.strftime('%Y/%m/%d:%H'), size:"9*2", disabled: true %>
   &nbsp;&nbsp;&nbsp;&nbsp;
-  <%= form.label "城市(City)：" %>
+  <%= form.label "场景(A Zone)：" %>
   <%= form.text_field :city , size:"9*2" %>
   <% @idea.errors.full_messages_for(:city).each do |message| %>
     <div><%= message %></div>
@@ -42,7 +42,7 @@
     <strong>灵感(Oblique Strategies):</strong>
     <span id='oblique'></span>
     <br>
-    <strong>丹文:</strong>
+    <strong>丹文(Description):</strong>
     <span id='answer'></span>
     <br>
 
