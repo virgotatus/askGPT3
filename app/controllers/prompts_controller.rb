@@ -81,7 +81,7 @@ class PromptsController < ApplicationController
     client = OpenAI::Client.new
     response = client.completions(
         parameters: {
-            model: "text-davinci-001",
+            model: "text-davinci-003",
             prompt: prompt_text,
             max_tokens: 10
         })
