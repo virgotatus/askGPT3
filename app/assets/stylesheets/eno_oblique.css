@@ -164,6 +164,10 @@ footer {
   display: block;
 }
 
+#answer {
+  white-space: pre-line;
+}
+
 footer {
   text-align: center;
 }
