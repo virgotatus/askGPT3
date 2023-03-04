@@ -16,7 +16,7 @@
 
 
 <div class="main">
-<%= form_with model: @idea, url: "ideas/ask_ai", method: "post" do |form| %>
+<%= form_with model: @idea, url: "ideas/ask_ai", method: "post", id:"question" do |form| %>
   <%= form.text_field "gtime", value:Time.now.strftime('%Y/%m/%d:%H'), size:"9*2", disabled: true %>
   &nbsp;&nbsp;&nbsp;&nbsp;
   <%= form.label "场景(Zone)：" %>
@@ -37,7 +37,7 @@
   </div>
 <% end %>
 
-<p id="answer-container" class="hidden showing">
+<p id="answer-container" class="hidden">
   <%= turbo_frame_tag do %>
     <strong>灵感(Oblique Strategies):</strong>
     <span id='oblique'></span>
@@ -47,6 +47,11 @@
     <br>
   <% end %>
 </p>
+<%= form_with url: "ideas/send_email", method: "post", id:"send-email", class:"hidden" do |form| %>
+  <%= form.label "Email：" %>
+  <%= form.text_field :email , size:"12*2" %>
+  <%= form.submit "喜欢吗？发送至邮件吧(Email it!)", id:"send-email-button" %>
+<% end %>
 </div>
 
 <footer>

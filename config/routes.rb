@@ -9,5 +9,6 @@ Rails.application.routes.draw do
   get 'ideas', to: "ideas#index"
   post 'ideas', to: "ideas#create"
   post 'ideas/ask_ai', to: 'ideas#ask_ai'
+  post 'ideas/send_email', to: 'ideas#send_email'
 
 end

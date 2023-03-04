@@ -2,11 +2,13 @@
 
 A demo of askGPT3 project
 
-Use ruby on rails. Deploy on ALiyun cloud by puma and Nginx. Use OpenAI GPT3 davinci-003 model.
+Use ruby on rails. Deploy on ALiyun cloud by puma and Nginx. Use OpenAI API.
 
 - Project1 ask my book. Refer to https://github.com/slavingia/askmybook/
 
 - Project2 stochastic idea player. Inspired by Ideabuyer Club（灵感买家俱乐部）.
+  - input two words like zone and thing, output a random oblique strategies card. and then explain it with OpenAI.
+  - you can send it to your email.
 
 Things you may want to cover:
 

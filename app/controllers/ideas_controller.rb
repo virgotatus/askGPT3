@@ -1,7 +1,6 @@
 class IdeasController < ApplicationController
   def index
     @idea = Idea.new
-    
   end
 
   def ask_ai
@@ -22,12 +21,23 @@ class IdeasController < ApplicationController
     @idea = Idea.new(city: city, thing: thing, style: style, oblique: oblique_word, answer: ai_result)
     if @idea.save
       puts "save idea successful"
+      session[:current_idea_id] = @idea.id
     else
       print "save failed:", @idea.errors.full_messages.join(", ")
     end
 
     @data = { oblique: oblique_word, answer: ai_result }
     render json: @data
+  end
+
+  def send_email
+    email = params[:email]
+    @idea = current_idea()
+    puts "email", @idea.city, @idea.thing, @idea.oblique, @idea.answer
+    NotifierMailer.with(idea: @idea).notify_email(email).deliver_now
+    session.delete(:current_idea_id)
+    @_current_idea = nil
+    render json: {}, status: :no_content
   end
 
   def get_ai(prompt_text)
@@ -65,4 +75,14 @@ class IdeasController < ApplicationController
     result = result[0]  # index 0 of reply array
   end
 
+  private
+
+  # Finds the Idea with the ID stored in the session with the key
+  # :current_idea_id This is a common way to handle user login in
+  # a Rails application; logging in sets the session value and
+  # logging out removes it.
+  def current_idea
+    @_current_idea ||= session[:current_idea_id] &&
+      Idea.find_by(id: session[:current_idea_id])
+  end
 end
