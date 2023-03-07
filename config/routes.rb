@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  root "prompts#index"
+  root "ideas#index"
   resources :prompts do
     resources :reply
     resources :detail

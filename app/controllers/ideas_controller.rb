@@ -34,6 +34,7 @@ class IdeasController < ApplicationController
     email = params[:email]
     @idea = current_idea()
     puts "email", @idea.city, @idea.thing, @idea.oblique, @idea.answer
+    @idea.update(email: email)
     NotifierMailer.with(idea: @idea).notify_email(email).deliver_now
     session.delete(:current_idea_id)
     @_current_idea = nil
