@@ -1,5 +1,5 @@
 # ask-my-book's chat context questions of book
-BOOK_PAGES_PATH = "D:\\Study\\python style of Google.pdf.pages.csv"
+BOOK_PAGES_PATH = Rails.root.join("storage", "python style of Google.pdf.pages.csv").to_path
 BOOK_EMBEDDINGS_PATH = BOOK_PAGES_PATH.gsub(".pdf.pages.csv", ".pdf.embeddings.csv")
 
 question_1 = {"Q": "How to choose what business to start?", "A": "First off don't be in a rush. Look around you, see what problems you or other people are facing, and solve one of these problems if you see some overlap with your passions or skills. Or, even if you don't see an overlap, imagine how you would solve that problem anyway. Start super, super small."}

@@ -100,10 +100,10 @@ class PromptsController < ApplicationController
     if !body.end_with?("?")
       body += "?"
     end
-    @prompt.update(body: body)
 
     previous_question = Prompt.where(body: body).first
     audio_src_url = (previous_question and previous_question.reply and previous_question.reply.radio_url)
+    @prompt.update(body: body) # note a probably bug: prompt update should after at finding previous_question, or it will find itself.
     if audio_src_url
       print("previously asked and answered: " + previous_question.reply.body + " ( " + previous_question.reply.radio_url + ")")
       @prompt.reply.update(body: previous_question.reply.body, radio_url: previous_question.reply.radio_url)
@@ -114,7 +114,7 @@ class PromptsController < ApplicationController
     exampleQA = ExampleQA.new(header=HEADER, list_QA=LIST_QA)
     df = PageFrame.new(BOOK_PAGES_PATH)
     document_embeddings = load_embeddings(BOOK_EMBEDDINGS_PATH)
-    answer, context = answer_query_with_context(body, df, document_embeddings, exampleQA)
+    answer, context = answer_query_with_context(body, df, document_embeddings, exampleQA, max_tokens=50)
     audio_uuid = speak_ai(answer)
 
     print("new asked and answer:" + answer + "(" + audio_uuid + ")")
@@ -124,7 +124,7 @@ class PromptsController < ApplicationController
     else
       @prompt.reply.update(body: answer, audio_uuid: audio_uuid )
     end
-    
+
     render json: {"answer": @prompt.reply.body , "audio_uuid": audio_uuid }
   end
 
@@ -148,7 +148,7 @@ class PromptsController < ApplicationController
       is_public: nil,
       is_archived: nil
     )
-    puts "create async audio ", response["success"] ? "succeed!" : response["message"]
+    print("create async audio ", response["success"] ? "succeed!" : response["message"])
     clip_uuid = (response["success"] ? response['item']['uuid'] : "")
     return clip_uuid
   end

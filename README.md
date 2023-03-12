@@ -35,6 +35,7 @@ Things you may want to cover:
 * Database initialization
   - python read book-pdf: python pdf_to_pages_embedding.py -pdf yourbook.pdf
   - write some question and answer with chat context in config/initializers/my_book.rb
+  - book.pdf , book.pdf.pages.csv and book.pdf.embeddings.csv should be store at /storage folder.
 
 * How to run the test suite
 

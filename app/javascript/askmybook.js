@@ -115,6 +115,7 @@ $(document).ready(function() {
     return false;
   });
 
+  /* test for asynch resemble callback response for ActionCable Channel */
   $("#test-resemble").click(function(e) {
     post_message = {"id": "cecad6xf9",
     "project_id": "3700a2f1",

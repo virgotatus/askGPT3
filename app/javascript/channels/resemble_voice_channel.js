@@ -20,4 +20,4 @@ document.addEventListener('voice-channel', (e) => {
       audio.play();
     }
   });
-})
+});

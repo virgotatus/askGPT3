@@ -104,7 +104,7 @@ module EmbeddingProcess
     return message, chosen_sections.join("")
   end
 
-  def answer_query_with_context(query, df, document_embeddings, example_QA)
+  def answer_query_with_context(query, df, document_embeddings, example_QA, max_tokens)
     # call new gpt-3.5-turbo and chat to get answer
     message, context = construct_message(query, document_embeddings, df, example_QA)
     # print("===\n", prompt)
@@ -113,7 +113,7 @@ module EmbeddingProcess
         parameters: {
             model: COMPLETIONS_MODEL,
             messages: message,
-            max_tokens: 150,
+            max_tokens: max_tokens,
             temperature: 0.0,
         })
     print( "call OpenAI::Chat: ", response.dig("choices", 0, "message", "content"))
