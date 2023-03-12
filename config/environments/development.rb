@@ -8,6 +8,23 @@ Rails.application.configure do
   # since you don't have to restart the web server when you make code changes.
   config.cache_classes = false
 
+  # email setting for 163 mail
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.smtp_settings = {
+    address:              'smtp.163.com',
+    port:                 465,
+    domain:               '163.com',
+    user_name:            'gyl_gamelife',
+    password:             ENV['WY_MAIL_SMTP'],
+    authentication:       'login',
+    ssl:                  true,
+  }
+
+  # proxy setting
+
+
   # Do not eager load code on boot.
   config.eager_load = false
 

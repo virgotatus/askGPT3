@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+    <%= stylesheet_link_tag 'eno_oblique.css', media: 'all', 'data-turbolinks-track': 'reload' %>
+  </head>
+  <body>
+    <h1>Welcome to Stochastic Idea Player. Your generated idea is: </h1>
+    <p id="answer-container" class="hidden showing ">
+      <strong>灵感(Oblique Strategies):</strong>
+      <span id='oblique'><%= @idea.oblique %></span>
+      <br>
+      <strong>丹文(Description):</strong>
+      <span id='answer' class="pre-line"><%= @idea.answer %></span>
+      <br>
+    </p>
+    <p>
+      To get another one, just follow this link: <%= "http://44.211.123.159/ideas" %>.
+    </p>
+    <p>Thanks for joining and have a great day!</p>
+  </body>
+</html>

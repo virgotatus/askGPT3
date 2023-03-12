@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_02_26_043755) do
+ActiveRecord::Schema[7.0].define(version: 2023_03_10_152137) do
   create_table "details", force: :cascade do |t|
     t.string "imgname"
     t.string "imglink"
@@ -30,6 +30,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_26_043755) do
     t.text "answer"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "email"
   end
 
   create_table "prompts", force: :cascade do |t|
@@ -45,6 +46,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_02_26_043755) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "radio_url"
+    t.string "audio_uuid"
     t.index ["prompt_id"], name: "index_replies_on_prompt_id"
   end
 

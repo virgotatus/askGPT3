@@ -16,16 +16,16 @@
 
 
 <div class="main">
-<%= form_with model: @idea, url: "ideas/ask_ai", method: "post" do |form| %>
+<%= form_with model: @idea, url: "ideas/ask_ai", method: "post", id:"question" do |form| %>
   <%= form.text_field "gtime", value:Time.now.strftime('%Y/%m/%d:%H'), size:"9*2", disabled: true %>
   &nbsp;&nbsp;&nbsp;&nbsp;
-  <%= form.label "场景(A Zone)：" %>
+  <%= form.label "场景(Zone)：" %>
   <%= form.text_field :city , size:"9*2" %>
   <% @idea.errors.full_messages_for(:city).each do |message| %>
     <div><%= message %></div>
   <% end %>
   &nbsp;&nbsp;&nbsp;&nbsp;
-  <%= form.label "东西(A thing)：" %>
+  <%= form.label "东西(thing)：" %>
   <%= form.text_field :thing, size:"9*2" %>
   <% @idea.errors.full_messages_for(:city).each do |message| %>
     <div><%= message %></div>
@@ -37,16 +37,21 @@
   </div>
 <% end %>
 
-<p id="answer-container" class="hidden showing">
-
+<p id="answer-container" class="hidden">
+  <%= turbo_frame_tag do %>
     <strong>灵感(Oblique Strategies):</strong>
     <span id='oblique'></span>
     <br>
     <strong>丹文(Description):</strong>
     <span id='answer'></span>
     <br>
-
+  <% end %>
 </p>
+<%= form_with url: "ideas/send_email", method: "post", id:"send-email", class:"hidden" do |form| %>
+  <%= form.label "Email：" %>
+  <%= form.text_field :email , size:"12*2" %>
+  <%= form.submit "喜欢吗？发送至邮件吧(Email it!)", id:"send-email-button" %>
+<% end %>
 </div>
 
 <footer>
