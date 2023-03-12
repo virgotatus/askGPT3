@@ -100,34 +100,32 @@ class PromptsController < ApplicationController
     if !body.end_with?("?")
       body += "?"
     end
+    @prompt.update(body: body)
 
     previous_question = Prompt.where(body: body).first
     audio_src_url = (previous_question and previous_question.reply and previous_question.reply.radio_url)
     if audio_src_url
       print("previously asked and answered: " + previous_question.reply.body + " ( " + previous_question.reply.radio_url + ")")
-      @prompt.update(body: body)
       @prompt.reply.update(body: previous_question.reply.body, radio_url: previous_question.reply.radio_url)
-      render json: {"answer": previous_question.reply.body , "audio_src_url": audio_src_url }
+      render json: {"answer": previous_question.reply.body , "audio_src_url": audio_src_url, "audio_uuid": previous_question.reply.audio_uuid }
       return 
     end
-    
-    @prompt.update(body: body)
+    # can't find previous question so create new by asking GPT
     exampleQA = ExampleQA.new(header=HEADER, list_QA=LIST_QA)
     df = PageFrame.new(BOOK_PAGES_PATH)
     document_embeddings = load_embeddings(BOOK_EMBEDDINGS_PATH)
     answer, context = answer_query_with_context(body, df, document_embeddings, exampleQA)
-    audio_uuid, audio_url = speak_ai(answer)
+    audio_uuid = speak_ai(answer)
 
-    print("new asked and answer:" + answer + "(" +(audio_url if audio_url else "unget now") + ")")
+    print("new asked and answer:" + answer + "(" + audio_uuid + ")")
     if @prompt.reply == nil
-      @prompt.reply = Reply.new(body: answer, radio_url: audio_url, audio_uuid: audio_uuid)
+      @prompt.reply = Reply.new(body: answer, audio_uuid: audio_uuid)
       @prompt.save
     else
-      @prompt.reply.update(body: answer, radio_url: audio_url, audio_uuid: audio_uuid )
+      @prompt.reply.update(body: answer, audio_uuid: audio_uuid )
     end
     
-    render json: {"answer": @prompt.reply.body , "audio_src_url": audio_url }
-
+    render json: {"answer": @prompt.reply.body , "audio_uuid": audio_uuid }
   end
 
   def speak_ai(text)
@@ -136,7 +134,7 @@ class PromptsController < ApplicationController
     Resemble.api_key = ENV['RESEMBLE_API_TOKEN']
     project_uuid = ENV['RESEMBLE_PROJECT_UUID']
     voice_uuid = ENV['RESEMBLE_VOICE_UUID']
-    callback_uri = 'http://44.211.123.159/prompts/resemble_callback'
+    callback_uri = ENV['DEPLOY_ADDRESS']+'/prompts/resemble_callback'
     response = Resemble::V2::Clip.create_async(
       project_uuid,
       voice_uuid,
@@ -150,12 +148,9 @@ class PromptsController < ApplicationController
       is_public: nil,
       is_archived: nil
     )
-    puts "create async audio ", response["success"] ? "" : response["message"]
-    clip_uuid = response['item']['uuid']
-    response = Resemble::V2::Clip.get(project_uuid, clip_uuid)
-    puts "get audio ", response["success"] ? response["item"]["uuid"] : response["message"]
-    audio_src = response["item"]["audio_src"]
-    return clip_uuid, audio_src
+    puts "create async audio ", response["success"] ? "succeed!" : response["message"]
+    clip_uuid = (response["success"] ? response['item']['uuid'] : "")
+    return clip_uuid
   end
 
   def async_callback_resemble
@@ -166,6 +161,7 @@ class PromptsController < ApplicationController
       reply.update(radio_url: audio_src_url) # update reply record
       puts "resemble callback async! update audio_url"
     end
+    ActionCable.server.broadcast("voice_#{clip_uuid}", { "audio_src_url": audio_src_url })
     render json: {"audio_src_url": audio_src_url }, status: :ok
   end
 

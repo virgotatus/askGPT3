@@ -76,8 +76,6 @@ $(document).ready(function() {
         // Do something with the response data
         $(".buttons").hide();
         console.log(data);
-        var audio = document.getElementById('audio');
-        audio.src = data.audio_src_url;
 
         var answer = document.getElementById('answer');
         answer.innerHTML = "";
@@ -85,10 +83,21 @@ $(document).ready(function() {
         window.answerShower = setTimeout(function() {
           showText("#answer", data.answer, 0);
         }, 1200);
-  
-        audio.volume = 0.3;
-        audio.play();
-  
+
+        if (data.audio_src_url) {
+          var audio = document.getElementById('audio');
+          audio.src = data.audio_src_url;
+          audio.volume = 0.3;
+          audio.play();
+        }
+        else {
+          console.log(data.audio_uuid);
+          const eventAudioChannel = new CustomEvent("voice-channel", {
+            detail: data.audio_uuid,
+          });
+          document.dispatchEvent(eventAudioChannel);
+        }
+
         askButton.textContent = "Ask question";
         askButton.disabled = false;
         console.log("submit success");
@@ -105,6 +114,30 @@ $(document).ready(function() {
     e.preventDefault();
     return false;
   });
+
+  $("#test-resemble").click(function(e) {
+    post_message = {"id": "cecad6xf9",
+    "project_id": "3700a2f1",
+    "url": "https://app.resemble.ai/rails/active_storage/blobs/redirect/eyJfcmFpbHMiOnsibWVzc2FnZSI6IkJBaHBCTlpMVkF3PSIsImV4cCI6bnVsbCwicHVyIjoiYmxvYl9pZCJ9fQ==--6212af427bea869ec1970ba9417ee3681d84fc78/cecad6f9-22694eeb.wav"};
+    $.ajax({
+      type: "POST",
+      url: "/prompts/resemble_callback",
+      data: post_message,
+      datatype: "json",
+      encode: true,
+      beforeSend: function(xhr) {
+        // Do something before the request is sent
+        var token = $('meta[name="csrf-token"]').attr('content');
+        console.log(token);
+        xhr.setRequestHeader('X-CSRF-Token', token);
+      },
+      success: function(data) {
+        console.log("post test resemble");
+      },
+    });
+
+  });
+
 })
 
 /*
