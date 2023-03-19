@@ -7,6 +7,7 @@
   <body>
     <h1>Welcome to Stochastic Idea Player. Your generated idea is: </h1>
     <p id="answer-container" class="hidden showing ">
+      <strong>场景: </strong><%= @idea.city %> &nbsp; <strong>东西: </strong><%= @idea.thing %><br>
       <strong>灵感(Oblique Strategies):</strong>
       <span id='oblique'><%= @idea.oblique %></span>
       <br>
@@ -15,7 +16,7 @@
       <br>
     </p>
     <p>
-      To get another one, just follow this link: <%= "http://44.211.123.159/ideas" %>.
+      To get another one, just follow this link: <%= "http://asky.ideaplayer.shop/" %>.
     </p>
     <p>Thanks for joining and have a great day!</p>
   </body>

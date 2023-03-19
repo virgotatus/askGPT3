@@ -11,5 +11,6 @@ Rails.application.routes.draw do
   post 'ideas', to: "ideas#create"
   post 'ideas/ask_ai', to: 'ideas#ask_ai'
   post 'ideas/send_email', to: 'ideas#send_email'
+  post 'ideas/baixing/chat', to: 'ideas#baixing'
 
 end
