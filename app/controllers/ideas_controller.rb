@@ -78,6 +78,10 @@ class IdeasController < ApplicationController
     qid = params[:qid]
     uid = params[:uid]
     city, thing = p.split(/[,，]/)
+    if (city==nil or thing == nil)
+      render json: {"data": {"type": "text", "content": "调皮，输入格式不对哦，别调戏我~~请认真对待"}}
+      return
+    end
     @idea = Idea.new(city: city, thing: thing)
     if @idea.save
       puts "save idea successful"
@@ -87,7 +91,6 @@ class IdeasController < ApplicationController
     end
     prompt = @idea.construct_prompt
     ai_result = get_ai(prompt)
-    ai_result = "get_ai(prompt)"
     print "prompt: ", prompt, "result:", ai_result
     @idea.update(answer: ai_result, email: "hackathon-hf@baixing.com")
     template = File.read(Rails.root.join('app', 'views', 'notifier_mailer','notify_email.text.erb'))

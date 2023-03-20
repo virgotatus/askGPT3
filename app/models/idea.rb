@@ -1,7 +1,6 @@
 class Idea < ApplicationRecord
   validates :city, presence: true
   validates :thing, presence: true
-  attr_accessor :oblique
 
   def construct_prompt
     style = "create a haiku"
