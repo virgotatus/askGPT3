@@ -23,7 +23,7 @@ Rails.application.configure do
   }
 
   # proxy setting
-
+  config.hosts << "asky.ideaplayer.shop"
 
   # Do not eager load code on boot.
   config.eager_load = false
