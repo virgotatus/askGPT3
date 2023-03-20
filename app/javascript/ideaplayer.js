@@ -9,7 +9,22 @@ $(document).ready(function() {
       //history.pushState({}, null, "/question/" + window.newQuestionId);
     }
   }
-  
+
+  $("#idea_city").click(function(e) {
+    var bgm = document.getElementById('bgm');
+    if (bgm.paused) {
+      bgm.volume = 0.3;
+      bgm.play();
+    }
+  });
+  $("#idea_thing").click(function(e) {
+    var bgm = document.getElementById('bgm');
+    if (bgm.paused) {
+      bgm.volume = 0.3;
+      bgm.play();
+    }
+  });
+
   $("#question").submit(function(e) {
     if (document.getElementById("idea_city").value == "") {
       alert("Please fill zone!");
@@ -26,7 +41,10 @@ $(document).ready(function() {
     let askButton = document.getElementById("ask-button");
     askButton.textContent = "Generating...";
     askButton.disabled = true;
-    
+    document.getElementById('answer-container').classList.replace("showing", "hidden");
+    document.getElementById("send-email").classList.replace("showing", "hidden");
+    document.getElementById("money").classList.replace("showing", "hidden");
+
     // Make the AJAX request
     $.ajax({
       type: "POST",
@@ -64,9 +82,11 @@ $(document).ready(function() {
         askButton.disabled = false;
         console.log("submit success");
         //window.newQuestionId = data.id;
+        document.getElementById('money').classList.add("showing");
       },
       error: function(xhr, textStatus, errorThrown) {
         // Handle errors here
+        window.alert("生成失败(failed), 时机未到(waiting).");
       },
       complete: function() {
         // Do something after the request is complete

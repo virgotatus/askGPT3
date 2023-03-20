@@ -52,12 +52,25 @@
   <%= form.text_field :email , size:"12*2" %>
   <%= form.submit "喜欢吗？发送至邮件吧(Email it!)", id:"send-email-button" %>
 <% end %>
+<br><br>
+<div class="hidden" id="money" style="text-align: center;margin: 0 auto">
+<%= image_tag "money.jpg" %>
+</div>
 </div>
 
 <footer>
+  <audio id="bgm" controls autoplay loop >
+    <source src=<%= asset_path("reflection_brian_eno.mp3") %> type="audio/mpeg">
+  </audio>
   <p>
-    <ul class="queue credits"> Project by <%= link_to " Elon Gong", "https://blog.elonarise.top/" %> <b> · </b>
-    <%= link_to "Fork on Github", "https://github.com/virgotatus/askGPT3" %> </ul>
+    <ul class="queue credits">
+    已给出灵感(Served Ideas): &nbsp; <%= Idea.all.size %>
+    </ul>
+    <ul class="queue credits">
+    <%= link_to "Manual", "https://mp.weixin.qq.com/s/BTK111M6iangsNeTNujkzA" %> <b> · </b>
+    Project by <%= link_to " Elon Gong", "https://blog.elonarise.top/" %> <b> · </b>
+    <%= link_to "Fork on Github", "https://github.com/virgotatus/askGPT3" %>
+    </ul>
   </p>
 </footer>
 
