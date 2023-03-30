@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_03_10_152137) do
+ActiveRecord::Schema[7.0].define(version: 2023_03_30_021825) do
   create_table "details", force: :cascade do |t|
     t.string "imgname"
     t.string "imglink"
@@ -31,6 +31,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_03_10_152137) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "email"
+    t.string "locale", default: "zh"
   end
 
   create_table "prompts", force: :cascade do |t|
