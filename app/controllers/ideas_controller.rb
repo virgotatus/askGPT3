@@ -1,3 +1,7 @@
+require "uri"
+require "json"
+require "net/http"
+
 class IdeasController < ApplicationController
   skip_before_action :verify_authenticity_token, only: [:baixing]
   def index
@@ -7,16 +11,23 @@ class IdeasController < ApplicationController
   def ask_ai
     city = params[:idea][:city]
     thing = params[:idea][:thing]
-    @idea = Idea.new(city: city, thing: thing)
+    locale = extract_locale_from_accept_language_header
+    @idea = Idea.new(city: city, thing: thing, locale: locale)
     if @idea.save
-      puts "save idea successful"
       session[:current_idea_id] = @idea.id
     else
-      print "save failed:", @idea.errors.full_messages.join(", ")
+      logger.debug "save failed, error:#{@idea.errors.full_messages.join(", ")}"
     end
     prompt = @idea.construct_prompt
+    logger.info "request idea saved. city:#{city}, thing:#{thing}, locale:#{locale}, oblique:#{@idea.oblique}, prompt:#{prompt}\n"
     ai_result = get_ai(prompt)
-    print "prompt: ", prompt, "result:", ai_result
+    if (ai_result == nil)
+      logger.debug "get ai result nil, failed!"
+      render status: :unprocessable_entity
+      @idea.delete
+      return
+    end
+    logger.info "ai result: #{ai_result}"
     @idea.update(answer: ai_result)
 
     @data = { oblique: @idea.oblique, answer: ai_result }
@@ -26,12 +37,34 @@ class IdeasController < ApplicationController
   def send_email
     email = params[:email]
     @idea = current_idea()
-    puts "email", @idea.city, @idea.thing, @idea.oblique, @idea.answer
+    logger.info "email to #{email}: #{@idea.id}, #{@idea.city}, #{@idea.thing}, #{@idea.oblique}, #{@idea.answer}"
     @idea.update(email: email)
     NotifierMailer.with(idea: @idea).notify_email(email).deliver_now
-    session.delete(:current_idea_id)
-    @_current_idea = nil
     render json: {}, status: :no_content
+  end
+
+  def gen_shared_picture
+    url = URI("https://api.imgrender.cn/open/v1/pics")
+    https = Net::HTTP.new(url.host, url.port)
+    https.use_ssl = true
+
+    request = Net::HTTP::Post.new(url)
+    request["X-API-Key"] = ENV['IMG_GEN_API']
+    request["Content-Type"] = "application/json"
+
+    @idea = current_idea()
+    template = File.read(Rails.root.join('app', 'views', 'ideas','share_picture.json.erb'))
+    renderer = ERB.new(template)
+    request.body = renderer.result(binding)
+    response = https.request(request)
+    res_body = JSON.load(response.read_body)
+    if (res_body["code"] == 0)
+      gen_picture = res_body["data"]["url"]
+      puts gen_picture
+      render json: {img_path: gen_picture}, status: :ok
+    else
+      render json: res_body, status: :unprocessable_entity
+    end
   end
 
   def get_ai(prompt_text)
@@ -57,8 +90,8 @@ class IdeasController < ApplicationController
         })
     if response["error"]
       raise RuntimeError, response["error"]
+      return 
     end
-    puts response.dig("choices", 0, "message", "content")
     result = response.dig("choices", 0, "message", "content")
     
     # response = client.completions(
@@ -69,7 +102,6 @@ class IdeasController < ApplicationController
     #         temperature: 0.7,
     #     })
     # result = response["choices"].map { |c| c["text"] }
-    # puts result
     # result = result[0]  # index 0 of reply array
   end
 
@@ -84,15 +116,15 @@ class IdeasController < ApplicationController
     end
     @idea = Idea.new(city: city, thing: thing)
     if @idea.save
-      puts "save idea successful"
       session[:current_idea_id] = @idea.id
     else
-      print "save failed:", @idea.errors.full_messages.join(", ")
+      logger.debug "save failed, error: #{@idea.errors.full_messages.join(", ")}"
     end
     prompt = @idea.construct_prompt
     ai_result = get_ai(prompt)
-    print "prompt: ", prompt, "result:", ai_result
     @idea.update(answer: ai_result, email: "hackathon-hf@baixing.com")
+    logger.info "baixing api: generate idea successful, city:#{city}, thing:#{thing}, oblique:#{@idea.oblique},
+     prompt:#{prompt} answer:#{ai_result} \n"
     template = File.read(Rails.root.join('app', 'views', 'notifier_mailer','notify_email.text.erb'))
     renderer = ERB.new(template)
     result = renderer.result(binding)
@@ -108,5 +140,9 @@ class IdeasController < ApplicationController
   def current_idea
     @_current_idea ||= session[:current_idea_id] &&
       Idea.find_by(id: session[:current_idea_id])
+  end
+  # locale from language header
+  def extract_locale_from_accept_language_header
+    request.env['HTTP_ACCEPT_LANGUAGE'].scan(/^[a-z]{2}/).first
   end
 end

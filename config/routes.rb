@@ -12,5 +12,6 @@ Rails.application.routes.draw do
   post 'ideas/ask_ai', to: 'ideas#ask_ai'
   post 'ideas/send_email', to: 'ideas#send_email'
   post 'ideas/baixing/chat', to: 'ideas#baixing'
+  get 'ideas/generate_shared_picture', to: 'ideas#gen_shared_picture'
 
 end
