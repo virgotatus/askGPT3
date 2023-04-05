@@ -65,7 +65,6 @@ h1 + p {
 
 select,
 textarea,
-button,
 .button {
   box-sizing: border-box;
   width: 100%;
@@ -75,7 +74,6 @@ button,
   padding: 8px 12px;
 }
 
-button,
 .button {
   display: inline-block;
   color: white;
@@ -98,6 +96,11 @@ button:disabled {
   display: flex;
   justify-content: center;
   gap: 1rem;
+}
+
+.button_classical {
+  margin: auto;
+  margin-top: 5px;
 }
 
 p {
@@ -170,4 +173,73 @@ footer {
 
 footer {
   text-align: center;
+}
+
+/* shared picture model */
+
+/* modal background */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 100px; /* Location of the box */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.6); /* Black w/ opacity */
+}
+
+/* picture */
+.modal-content {
+  margin: auto;
+  display: block;
+  height: auto;
+  max-width: 700px;
+  max-height: 700px;
+  object-fit: contain;
+}
+
+/* add animation */
+.modal-content { 
+  -webkit-animation-name: zoom;
+  -webkit-animation-duration: 0.6s;
+  animation-name: zoom;
+  animation-duration: 0.6s;
+}
+
+@-webkit-keyframes zoom {
+  from {-webkit-transform:scale(0)} 
+  to {-webkit-transform:scale(1)}
+}
+
+@keyframes zoom {
+  from {transform:scale(0)} 
+  to {transform:scale(1)}
+}
+
+.close {
+  position: absolute;
+  top: 15px;
+  right: 35px;
+  color: #f1f1f1;
+  font-size: 40px;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.close:hover,
+.close:focus {
+  color: #bbb;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* screen scale to suit img for different platform: 100% */
+@media only screen and (max-height: 700px){
+  .modal-content {
+    height: auto;
+  }
 }

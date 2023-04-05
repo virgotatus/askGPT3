@@ -1,3 +1,7 @@
+require "uri"
+require "json"
+require "net/http"
+
 class IdeasController < ApplicationController
   skip_before_action :verify_authenticity_token, only: [:baixing]
   def index
@@ -36,9 +40,31 @@ class IdeasController < ApplicationController
     logger.info "email to #{email}: #{@idea.id}, #{@idea.city}, #{@idea.thing}, #{@idea.oblique}, #{@idea.answer}"
     @idea.update(email: email)
     NotifierMailer.with(idea: @idea).notify_email(email).deliver_now
-    session.delete(:current_idea_id)
-    @_current_idea = nil
     render json: {}, status: :no_content
+  end
+
+  def gen_shared_picture
+    url = URI("https://api.imgrender.cn/open/v1/pics")
+    https = Net::HTTP.new(url.host, url.port)
+    https.use_ssl = true
+
+    request = Net::HTTP::Post.new(url)
+    request["X-API-Key"] = ENV['IMG_GEN_API']
+    request["Content-Type"] = "application/json"
+
+    @idea = current_idea()
+    template = File.read(Rails.root.join('app', 'views', 'ideas','share_picture.json.erb'))
+    renderer = ERB.new(template)
+    request.body = renderer.result(binding)
+    response = https.request(request)
+    res_body = JSON.load(response.read_body)
+    if (res_body["code"] == 0)
+      gen_picture = res_body["data"]["url"]
+      puts gen_picture
+      render json: {img_path: gen_picture}, status: :ok
+    else
+      render json: res_body, status: :unprocessable_entity
+    end
   end
 
   def get_ai(prompt_text)

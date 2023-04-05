@@ -41,8 +41,7 @@ $(document).ready(function() {
     let askButton = document.getElementById("ask-button");
     askButton.textContent = "Generating...";
     askButton.disabled = true;
-    document.getElementById('answer-container').classList.replace("showing", "hidden");
-    document.getElementById("send-email").classList.replace("showing", "hidden");
+    document.getElementById("answer-show").classList.replace("showing", "hidden");
     document.getElementById("money").classList.replace("showing", "hidden");
 
     // Make the AJAX request
@@ -68,14 +67,13 @@ $(document).ready(function() {
 
         var answer = document.getElementById('answer');
         answer.innerHTML = "";
-        document.getElementById('answer-container').classList.add("showing");
+        document.getElementById('answer-show').classList.add("showing");
         window.answerShower = setTimeout(function() {
           showText("#answer", data.answer, 0);
         }, 1200);
 
         // audio.volume = 0.3;
         // audio.play();
-        document.getElementById('send-email').classList.add("showing");
         $("#send-email-button").attr("disabled", false);
         $("#send-email-button").val("喜欢吗？发送至邮件吧(Email it!)");
         askButton.textContent = "生成(Generate)";
@@ -87,6 +85,8 @@ $(document).ready(function() {
       error: function(xhr, textStatus, errorThrown) {
         // Handle errors here
         window.alert("生成失败(failed), 时机未到(waiting).");
+        askButton.textContent = "生成(Generate)";
+        askButton.disabled = false;
       },
       complete: function() {
         // Do something after the request is complete
@@ -132,4 +132,27 @@ $(document).ready(function() {
     e.preventDefault();
     return false;
   });
+
+  $('#share-picture-button').click(function() {
+    $.ajax({
+      url: '/ideas/generate_shared_picture',
+      method: 'GET',
+      dataType: 'json',
+      success: function(data) {
+        console.log(data);
+        // Do something with the response data
+        $('#shared-picture').attr('src', data.img_path);
+        $('#shared-picture-modal').attr('style', 'display:block');
+      },
+    });
+  });
+  // modal close button
+  var span = document.getElementsByClassName("close")[0];
+  span.onclick = function() { 
+    $('#shared-picture-modal').attr('style', 'display:none');
+  }
+  // $('#shared-picture-modal').click(function() {
+  //   $(this).attr('style', 'display:none');
+  // });
+
 })
