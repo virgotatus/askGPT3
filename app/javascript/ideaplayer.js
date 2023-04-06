@@ -42,7 +42,6 @@ $(document).ready(function() {
     askButton.textContent = "Generating...";
     askButton.disabled = true;
     document.getElementById("answer-show").classList.replace("showing", "hidden");
-    document.getElementById("money").classList.replace("showing", "hidden");
 
     // Make the AJAX request
     $.ajax({
@@ -75,12 +74,11 @@ $(document).ready(function() {
         // audio.volume = 0.3;
         // audio.play();
         $("#send-email-button").attr("disabled", false);
-        $("#send-email-button").val("喜欢吗？发送至邮件吧(Email it!)");
+        $("#send-email-button").val("邮件信号(Email Yourself)");
         askButton.textContent = "生成(Generate)";
         askButton.disabled = false;
         console.log("submit success");
         //window.newQuestionId = data.id;
-        document.getElementById('money').classList.add("showing");
       },
       error: function(xhr, textStatus, errorThrown) {
         // Handle errors here
@@ -118,7 +116,7 @@ $(document).ready(function() {
       },
       success: function(data) {
         // Do something with the response data
-        $("#send-email-button").val("已发送");
+        $("#send-email-button").val("已发送（Finished)");
         $("#send-email-button").attr("disabled", true);
       },
       error: function(xhr, textStatus, errorThrown) {
@@ -147,12 +145,19 @@ $(document).ready(function() {
     });
   });
   // modal close button
-  var span = document.getElementsByClassName("close")[0];
-  span.onclick = function() { 
+  var share_close = document.getElementById("share-close");
+  share_close.onclick = function() { 
     $('#shared-picture-modal').attr('style', 'display:none');
   }
   // $('#shared-picture-modal').click(function() {
   //   $(this).attr('style', 'display:none');
   // });
+
+  $('#money-button').click(function() {
+    $('#money-modal').attr('style', 'display:block');
+  });
+  $('#money-close').click(function() {
+    $('#money-modal').attr('style', 'display:none');
+  });
 
 })
