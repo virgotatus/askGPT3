@@ -58,9 +58,9 @@ class IdeasController < ApplicationController
     request.body = renderer.result(binding)
     response = https.request(request)
     res_body = JSON.load(response.read_body)
+    logger.info "imggenerate response: #{res_body.to_s} \n"
     if (res_body["code"] == 0)
       gen_picture = res_body["data"]["url"]
-      puts gen_picture
       render json: {img_path: gen_picture}, status: :ok
     else
       render json: res_body, status: :unprocessable_entity

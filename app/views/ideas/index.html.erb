@@ -53,15 +53,24 @@
   <!-- modal pop -->
   <div id="shared-picture-modal" class="modal" style="display: none;">
     <!-- close button -->
-    <span class="close" onclick="document.getElementById(&#039;shared-picture-modal&#039;).style.display=&#039;none&#039;">&times;</span>
+    <span class="close" id="share-close" onclick="document.getElementById(&#039;shared-picture-modal&#039;).style.display=&#039;none&#039;">&times;</span>
     <!-- shared picture content -->
     <img class="modal-content" id="shared-picture" />
   </div>
-  <%= button_tag "打赏！(Buy me a Coffee)", type:"button", id:"coffee-button", class:"button_classical", style:"display: block;" %>
+  <%= button_tag "打赏！(Buy me a Coffee)", type:"button", id:"money-button", class:"button_classical", style:"display: block;" %>
+  <div class="modal" id="money-modal" style="display: none;">
+  <span class="close" id="money-close" onclick="document.getElementById(&#039;money-modal&#039;).style.display=&#039;none&#039;">&times;</span>
+  <%= image_tag "money.jpg", class:"modal-content", style:"height: 50%;" %> 
+  <span class="modal-content" style="text-align: center; color: #ccc; background: repeating-radial-gradient(#000000, transparent 100px);">
+    微信: gong435491723 <br> OR <br>
+    <%= link_to "Paypal Me", "https://paypal.me/elongong?country.x=C2&locale.x=zh_XC" %>
+  </span>
+  </div>
+  
   <%= form_with url: "ideas/send_email", method: "post", id:"send-email", style:"margin-top:5px;" do |form| %>
     <%= form.label "Email：" %>
-    <%= form.text_field :email , size:"12*2" %> &nbsp;&nbsp;
-    <%= form.submit "喜欢吗？发送至邮件吧(Email it!)", id:"send-email-button" %>
+    <%= form.text_field :email , size:"12*2" %> &nbsp;
+    <%= form.submit "邮件信号(Email Yourself)", id:"send-email-button" %>
   <% end %>
   </div>
 
@@ -81,9 +90,6 @@
     <%= link_to "Fork on Github", "https://github.com/virgotatus/askGPT3" %>
     </ul>
   </p>
-  <div class="hidden" id="money" style="text-align: center;margin: 0 auto">
-  <%= image_tag "money.jpg" %>
-  </div>
 </footer>
 
 </body>
