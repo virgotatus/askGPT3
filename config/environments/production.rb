@@ -5,6 +5,22 @@ Rails.application.configure do
 
   # Code is not reloaded between requests.
   config.cache_classes = true
+  # email setting for 163 mail
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.perform_deliveries = true
+  config.action_mailer.raise_delivery_errors = true
+  config.action_mailer.smtp_settings = {
+    address:              'smtp.163.com',
+    port:                 465,
+    domain:               '163.com',
+    user_name:            'gyl_gamelife',
+    password:             ENV['WY_MAIL_SMTP'],
+    authentication:       'login',
+    ssl:                  true,
+  }
+
+  # proxy setting
+  config.hosts << "asky.ideaplayer.shop"
 
   # Eager load code on boot. This eager loads most of Rails and
   # your application in memory, allowing both threaded web servers

@@ -13,22 +13,21 @@ class IdeasController < ApplicationController
     thing = params[:idea][:thing]
     locale = extract_locale_from_accept_language_header
     @idea = Idea.new(city: city, thing: thing, locale: locale)
-    if @idea.save
-      session[:current_idea_id] = @idea.id
-    else
-      logger.debug "save failed, error:#{@idea.errors.full_messages.join(", ")}"
-    end
     prompt = @idea.construct_prompt
     logger.info "request idea saved. city:#{city}, thing:#{thing}, locale:#{locale}, oblique:#{@idea.oblique}, prompt:#{prompt}\n"
     ai_result = get_ai(prompt)
     if (ai_result == nil)
       logger.debug "get ai result nil, failed!"
       render status: :unprocessable_entity
-      @idea.delete
       return
     end
     logger.info "ai result: #{ai_result}"
-    @idea.update(answer: ai_result)
+    if @idea.save
+      @idea.update(answer: ai_result)
+      session[:current_idea_id] = @idea.id
+    else
+      logger.debug "save failed, error:#{@idea.errors.full_messages.join(", ")}"
+    end
 
     @data = { oblique: @idea.oblique, answer: ai_result }
     render json: @data
@@ -89,8 +88,9 @@ class IdeasController < ApplicationController
             max_tokens: 512,
         })
     if response["error"]
+      logger.debug response["error"]
       raise RuntimeError, response["error"]
-      return 
+      return nil
     end
     result = response.dig("choices", 0, "message", "content")
     
