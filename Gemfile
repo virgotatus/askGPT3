@@ -31,7 +31,7 @@ gem "jbuilder"
 gem "ruby-openai"
 
 # env management
-gem 'dotenv-rails', groups: [:development, :test]
+gem 'dotenv-rails', groups: [:production, :development, :test]
 
 # Use Redis adapter to run Action Cable in production
 # gem "redis", "~> 4.0"
