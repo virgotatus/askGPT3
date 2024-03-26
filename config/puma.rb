@@ -15,14 +15,14 @@ threads min_threads_count, max_threads_count
 
 # Specifies the `port` that Puma will listen on to receive requests; default is 3000.
 #
-port ENV.fetch("PORT") { 3000 }
+# port ENV.fetch("PORT") { 3000 }
 
 # Specifies the `environment` that Puma will run in.
 #
 environment ENV.fetch("RAILS_ENV") { "production" }
 
 # Specifies the `pidfile` that Puma will use.
-#pidfile ENV.fetch("PIDFILE") { "tmp/pids/server.pid" }
+# pidfile ENV.fetch("PIDFILE") { "tmp/pids/server.pid" }
 
 # Specifies the number of `workers` to boot in clustered mode.
 # Workers are forked web server processes. If using threads and workers together
@@ -48,7 +48,7 @@ plugin :tmp_restart
 workers 0
 
 # Min and Max threads per worker
-threads 1, 6
+threads 1, 8
 
 app_dir = File.expand_path("../..", __FILE__)
 tmp_dir = "#{app_dir}/tmp"
@@ -58,15 +58,15 @@ tmp_dir = "#{app_dir}/tmp"
 #environment rails_env
 
 # Set up socket location
-#bind "unix://#{tmp_dir}/sockets/puma.sock"
+bind "unix://#{tmp_dir}/sockets/puma.sock"
 
 # Logging
-# stdout_redirect "#{tmp_dir}/log/puma.stdout.log", "#{tmp_dir}/log/puma.stderr.log", true
+stdout_redirect "#{tmp_dir}/log/puma.stdout.log", "#{tmp_dir}/log/puma.stderr.log", true
 
 # Set master PID and state locations
 pidfile "#{tmp_dir}/pids/puma.pid"
 state_path "#{tmp_dir}/pids/puma.state"
-# activate_control_app
+activate_control_app
 
 on_worker_boot do
   require "active_record"
