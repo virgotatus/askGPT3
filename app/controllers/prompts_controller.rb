@@ -114,7 +114,7 @@ class PromptsController < ApplicationController
     exampleQA = ExampleQA.new(header=HEADER, list_QA=LIST_QA)
     df = PageFrame.new(BOOK_PAGES_PATH)
     document_embeddings = load_embeddings(BOOK_EMBEDDINGS_PATH)
-    answer, context = answer_query_with_context(body, df, document_embeddings, exampleQA, max_tokens=50)
+    answer, context = answer_query_with_context(body, df, document_embeddings, exampleQA, max_tokens=10)
     audio_uuid = speak_ai(answer)
 
     print("new asked and answer:" + answer + "(" + audio_uuid + ")")
@@ -135,6 +135,7 @@ class PromptsController < ApplicationController
     project_uuid = ENV['RESEMBLE_PROJECT_UUID']
     voice_uuid = ENV['RESEMBLE_VOICE_UUID']
     callback_uri = ENV['DEPLOY_ADDRESS']+'/prompts/resemble_callback'
+    callback_uri = "https://webhook.site/c90b6bf1-de09-4d83-8d4e-73ee047838cb"
     response = Resemble::V2::Clip.create_async(
       project_uuid,
       voice_uuid,
