@@ -74,7 +74,7 @@ $(document).ready(function() {
         // audio.volume = 0.3;
         // audio.play();
         $("#send-email-button").attr("disabled", false);
-        $("#send-email-button").val("邮件信号(Email Yourself)");
+        $("#send-email-button").val("喜欢吗？发送邮箱吧(Email to Yourself)");
         askButton.textContent = "生成(Generate)";
         askButton.disabled = false;
         console.log("submit success");

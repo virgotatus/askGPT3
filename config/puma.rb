@@ -11,7 +11,7 @@ threads min_threads_count, max_threads_count
 # Specifies the `worker_timeout` threshold that Puma will use to wait before
 # terminating a worker in development environments.
 #
-worker_timeout 3600 if ENV.fetch("RAILS_ENV", "development") == "development"
+# worker_timeout 1000000000 if ENV.fetch("RAILS_ENV", "development") == "development"
 
 # Specifies the `port` that Puma will listen on to receive requests; default is 3000.
 #
@@ -19,7 +19,7 @@ worker_timeout 3600 if ENV.fetch("RAILS_ENV", "development") == "development"
 
 # Specifies the `environment` that Puma will run in.
 #
-environment ENV.fetch("RAILS_ENV") { "development" }
+environment ENV.fetch("RAILS_ENV") { "production" }
 
 # Specifies the `pidfile` that Puma will use.
 # pidfile ENV.fetch("PIDFILE") { "tmp/pids/server.pid" }
@@ -48,7 +48,7 @@ plugin :tmp_restart
 workers 0
 
 # Min and Max threads per worker
-threads 1, 6
+threads 1, 8
 
 app_dir = File.expand_path("../..", __FILE__)
 tmp_dir = "#{app_dir}/tmp"
